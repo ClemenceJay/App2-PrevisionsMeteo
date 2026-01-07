@@ -9,8 +9,8 @@ const CardActuelle = ({ meteo, meteoIconeUrl, startReload }) => {
   return (
         <View style={styles.cardPrincipale}>
             <View style={styles.containerText}>
-                <Text>{meteo.name}</Text>
-                <Text>{meteo.weather[0].description}</Text>
+                <Text style={styles.ville}>{meteo.name}</Text>
+                <Text style={styles.desc}>{meteo.weather[0].description}</Text>
             </View>
             <View style={styles.containerRow}>
                 <Image source={{uri: meteoIconeUrl}} style={{width: 150, height: 150}}/>
@@ -37,10 +37,18 @@ const styles = StyleSheet.create({
     borderRadius: 15
   },
   temperature:{
+    fontWeight: '600',
     fontSize:30
   },
   containerText: {
     alignItems:'center'
+  },
+  ville: {
+    fontWeight: '600',
+    fontSize:22
+  },
+  desc: {
+    fontSize: 16
   }
   
 });

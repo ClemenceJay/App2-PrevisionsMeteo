@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Image, FlatList, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, FlatList, ImageBackground, ActivityIndicator } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import { getLocales, getCalendars } from 'expo-localization';
@@ -23,6 +23,7 @@ export default function App() {
 
 
   const startReload = () => {
+    setPosition(null);
     setReload(!reload);
   }
 
@@ -95,7 +96,10 @@ export default function App() {
           <Previsions meteo5j={meteo5j} langue={langueDate}/>
         </View>
       ) : (
-        <Text>Les données chargent! Un peu de patience</Text>
+        <View style={[styles.container, styles.transparent]}>
+          <ActivityIndicator size="large" color="#ffd000ff"/>
+          <Text style={styles.textLoader}>Encore un peu de patience, votre météo arrive...</Text>
+        </View>
       )}
     </ImageBackground>
   );
@@ -106,10 +110,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   transparent: {
     backgroundColor:'transparent',
     gap:30
+  },
+  textLoader: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#382304ff'
   }
 });

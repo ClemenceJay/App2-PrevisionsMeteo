@@ -10,9 +10,12 @@ const CardPrevision = ({ prevision, langue }) => {
   const dateStr = prevision.item.dt_txt;
   const dateFull = new Date(dateStr.replace(" ", "T"));
 
+  const jour = dateFull.toLocaleDateString(langue, {
+    weekday: "long"
+  });
   const date = dateFull.toLocaleDateString(langue, {
-    weekday: "short",
-    day: "2-digit"
+    day: "2-digit",
+    month: "2-digit"
   });
   const heure = dateFull.toLocaleTimeString(langue, {
     hour: "numeric"
@@ -20,10 +23,10 @@ const CardPrevision = ({ prevision, langue }) => {
   
   return (
         <View style={styles.cardJour}>
-          <Text style={styles.date}>{date}</Text>
-          <Text>{heure}</Text>
-          <Text>{description}</Text>
+          <Text style={styles.date}>{jour.toUpperCase()} - {date}</Text>
+          <Text style={styles.heure}>{heure}</Text>
           <Image source={{uri: urlImage}} style={{width: 100, height: 100}}/>
+          <Text>{description}</Text>
         </View>
     );
 };
@@ -33,13 +36,18 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     flexShrink: 0,
     width: 200,
+    justifyContent:'center',
     alignItems: 'center',
     borderRadius: 15,
     backgroundColor: '#c1fff6c3',
-    marginRight:10
+    marginRight:10,
   },
   date: {
-    // fontSize
+    fontWeight: 400,
+    fontSize:20,
+  },
+  heure: {
+    fontWeight: 500
   }
 });
 
