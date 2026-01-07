@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, FlatList, ImageBackground } from 'react-native';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import { getLocales, getCalendars } from 'expo-localization';
+import Previsions from './composants/Previsions';
+import CardActuelle from './composants/CardActuelle';
+
+const background = require('./assets/background.jpg');
 
 export default function App() {
 
   const apiKey = Constants.expoConfig.extra.openWeatherApiKey;
 
   const [reload, setReload] = useState(false);
-  const [langue, setLangue] = useState(null);
+  const [langue, setLangue] = useState(null); //Code langue pour l'URL de l'API
+  const [langueDate, setLangueDate] = useState(null); // Code langue la gestion de la date
   const [position, setPosition] = useState(null);
   const [meteo, setMeteo] = useState(null);
   const [meteoIconeUrl, setMeteoIconeUrl] = useState(null);
@@ -33,6 +38,7 @@ export default function App() {
     const getLangue = () => {
       let langueDevice = getLocales();
       setLangue(langueDevice[0].languageCode);
+      setLangueDate(langueDevice[0].languageTag)
     }
 
     getPosition();
@@ -82,29 +88,16 @@ export default function App() {
   }, [position]);
 
   return (
-    <View style={styles.container}>
+    <ImageBackground style={styles.container} source={background} resizeMode="cover">
       {position && meteo && meteo5j? (
-        <View>
-          <Text>Vous êtes ici : {meteo.name}</Text>
-          <Text>Il fait : {meteo.main.temp}°C</Text>
-          <Text>Le temps : {meteo.weather[0].description}</Text>
-          <Image source={{uri: meteoIconeUrl}} style={{width: 50, height: 50}}/>
-          <FlatList
-            data={meteo5j}
-            style={styles.listeGoal}
-            renderItem={(jour) => {
-              return <Text style={styles.texttest}>{jour.item.dt_txt}</Text>}}
-          />
+        <View style={[styles.container, styles.transparent]}>
+          <CardActuelle meteo={meteo} meteoIconeUrl={meteoIconeUrl} startReload={startReload}/>
+          <Previsions meteo5j={meteo5j} langue={langueDate}/>
         </View>
       ) : (
         <Text>Les données chargent! Un peu de patience</Text>
       )}
-      <Button
-        title='relaod'
-        color='#3e3f2cff'
-        onPress={() => startReload(null)}/>
-      <StatusBar style="auto" />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -115,16 +108,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  listeGoal: {
-    margin: 20,
-    flexGrow: 0,
-    flexShrink: 1,
-    marginRight: 5,
-    marginLeft: 5,
-    maxHeight: '65%'
-  },
-  texttest: {
-    color: '#ad1717ff',
-    borderWidth: 2
+  transparent: {
+    backgroundColor:'transparent',
+    gap:30
   }
 });
